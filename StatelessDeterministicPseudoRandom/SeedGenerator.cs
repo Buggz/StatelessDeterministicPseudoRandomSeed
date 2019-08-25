@@ -3,13 +3,13 @@ using NodaTime;
 
 namespace StatelessDeterministicPseudoRandom
 {
-    public class Seed
+    public class SeedGenerator
     {
         private readonly IClock _clock;
         public static int DaysPerSeed = 10;
 
         /// <summary>Pass SystemClock.Instance in production</summary>
-        public Seed(IClock clock)
+        public SeedGenerator(IClock clock)
         {
             _clock = clock;
         }

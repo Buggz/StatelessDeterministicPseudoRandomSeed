@@ -15,7 +15,7 @@ namespace Tests
         public void Days_per_seed_should_be_significant()
         {
             // avoid stupid mistakes?
-            Seed.DaysPerSeed.Should().BeGreaterThan(1);
+            SeedGenerator.DaysPerSeed.Should().BeGreaterThan(1);
         }
         
         [Fact]
@@ -25,10 +25,10 @@ namespace Tests
 
             var seeds = new List<int>();
             
-            for (var i = 0; i < Seed.DaysPerSeed; i++)
+            for (var i = 0; i < SeedGenerator.DaysPerSeed; i++)
             {
                 var fakeClock = new FakeClock(startInstant.Plus(Duration.FromDays(i)));
-                var seed = new Seed(fakeClock);
+                var seed = new SeedGenerator(fakeClock);
                 seeds.Add(seed.GetCurrent().Value);
             }
 
@@ -41,23 +41,23 @@ namespace Tests
         {
             var startInstant = Instant.MinValue;
 
-            for (var i = 0; i < Seed.DaysPerSeed; i++)
+            for (var i = 0; i < SeedGenerator.DaysPerSeed; i++)
             {
                 var fakeClock = new FakeClock(startInstant.Plus(Duration.FromDays(i)));
-                var seed = new Seed(fakeClock);
+                var seed = new SeedGenerator(fakeClock);
 
-                seed.GetCurrent().Day.Should().Be(i);
+                seed.GetCurrent().DaysSinceRollover.Should().Be(i);
             }
         }
 
         [Fact]
         public void Value_should_be_different_after_n_plus_one_days()
         {
-            var firstInstant = Instant.MinValue.Plus(Duration.FromDays(Seed.DaysPerSeed - 1));
-            var secondInstant = Instant.MinValue.Plus(Duration.FromDays(Seed.DaysPerSeed));
+            var firstInstant = Instant.MinValue.Plus(Duration.FromDays(SeedGenerator.DaysPerSeed - 1));
+            var secondInstant = Instant.MinValue.Plus(Duration.FromDays(SeedGenerator.DaysPerSeed));
             
-            var firstSeed = new Seed(new FakeClock(firstInstant)).GetCurrent();
-            var secondSeed = new Seed(new FakeClock(secondInstant)).GetCurrent();
+            var firstSeed = new SeedGenerator(new FakeClock(firstInstant)).GetCurrent();
+            var secondSeed = new SeedGenerator(new FakeClock(secondInstant)).GetCurrent();
 
             firstSeed.Should().NotBe(secondSeed);
         }

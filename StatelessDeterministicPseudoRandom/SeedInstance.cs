@@ -2,15 +2,15 @@ namespace StatelessDeterministicPseudoRandom
 {
     public class SeedInstance
     {
-        public SeedInstance(int value, int day)
+        public SeedInstance(int value, int daysSinceRollover)
         {
             Value = value;
-            Day = day;
+            DaysSinceRollover = daysSinceRollover;
         }
 
         /// <summary>Seed value to use in new System.Random</summary>
         public int Value { get; }
         /// <summary>Days since last seed value rollover, use as index</summary>
-        public int Day { get; }
+        public int DaysSinceRollover { get; }
     }
 }

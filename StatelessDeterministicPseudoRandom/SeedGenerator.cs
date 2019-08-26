@@ -21,7 +21,7 @@ namespace StatelessDeterministicPseudoRandom
             var today = now.InUtc().LocalDateTime.Date;
             var totalDays = (today - LocalDate.MinIsoValue).Days;
 
-            var dayOfSeed = totalDays % 10;
+            var dayOfSeed = totalDays % DaysPerSeed;
             var seed = totalDays - dayOfSeed;
             
             return new SeedInstance(seed, dayOfSeed);

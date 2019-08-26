@@ -27,7 +27,9 @@ namespace StatelessDeterministicPseudoRandom
 
         public T GetRandomItemOutsideRolloverScope()
         {
-            var index = _rng.Next(SeedGenerator.DaysPerSeed, _list.Count);
+            // can't use fixed-seed random here, else every subsequent call would return the very same item 
+            var random = new Random();
+            var index = random.Next(SeedGenerator.DaysPerSeed, _list.Count);
             return _list[index];
         }
 

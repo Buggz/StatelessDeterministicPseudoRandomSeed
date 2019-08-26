@@ -1,48 +1,49 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NodaTime;
 
 namespace StatelessDeterministicPseudoRandom
 {
-    public class ListRandomizer
+    public class ListRandomizer<T>
     {
         private readonly SeedInstance _seed;
+        private readonly List<T> _list;
         private readonly Random _rng;
         
-        public ListRandomizer()
+        public ListRandomizer(SeedInstance seed, IEnumerable<T> list)
         {
-            _seed = new SeedGenerator(SystemClock.Instance).GetCurrent();
+            _seed = seed;
             _rng = new Random(_seed.Value);
+
+            _list = list.ToList();
+            Randomize();
         }
         
-        public T GetTodaysItem<T>(List<T> list)
+        public T GetTodaysItem()
         {
-            var randomizedList = Randomize(list, _seed.Value);
-
-            return randomizedList[_seed.DaysSinceRollover];
+            return _list[_seed.DaysSinceRollover];
         }
 
-        public T GetRandomItemOutsideRolloverScope<T>(List<T> list)
+        public T GetRandomItemOutsideRolloverScope()
         {
-            var index = _rng.Next(SeedGenerator.DaysPerSeed, list.Count);
-            return list[index];
+            var index = _rng.Next(SeedGenerator.DaysPerSeed, _list.Count);
+            return _list[index];
         }
 
-        private List<T> Randomize<T>(List<T> list, int seed)
+        private void Randomize()
         {
-            var n = list.Count;
+            var n = _list.Count;
 
             // Fisher-Yates shuffle
             while (n > 1)
             {
                 n--;
                 var k = _rng.Next(n + 1);
-                T item = list[k];
-                list[k] = list[n];
-                list[n] = item;
+                T item = _list[k];
+                _list[k] = _list[n];
+                _list[n] = item;
             }
-
-            return list;
         }
     }
 }
